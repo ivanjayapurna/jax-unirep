@@ -298,12 +298,14 @@ def fit(
         for (sl, x, y) in zip(seq_lens, xs, ys)
     }
 
+    print("seq_lens:", seq_lens)
+
     batch_lens = [len(batch) for batch in xs]
     logger.info(
         f"Length-batching done: "
         f"{len(batch_lens)} unique lengths, "
-        f"with average length {onp.mean(batch_lens)}, "
-        f"max length {max(batch_lens)} and min length {min(batch_lens)}."
+        f"with average batch size {onp.mean(batch_lens)}, "
+        f"max batch size {max(batch_lens)} and min batch size {min(batch_lens)}."
     )
 
     init, update, get_params = adamW(step_size=step_size)
@@ -312,6 +314,8 @@ def fit(
 
     # calculate how many iterations constitute one epoch approximately
     epoch_len = round(len(sequences) / batch_size)
+
+    print("epoch_len:", epoch_len)
 
     n = n_epochs * epoch_len
     for i in range(n):
@@ -322,6 +326,10 @@ def fit(
         logging.debug("Getting batches")
         l = choice(seq_lens)
         x, y = len_batching_funcs[l]()
+
+        if i % epoch_len == 0:
+            print("len(x)", len(x))
+            print("len(y)", len(y))
 
         # actual forward & backwrd pass happens here
         logging.debug("Getting state")
