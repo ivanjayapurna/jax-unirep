@@ -7,6 +7,7 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, Set
 from tqdm.autonotebook import tqdm
 import gc
 
+from jax.xla import DeviceValue, DeviceConstant
 import jax.numpy as np
 import numpy as onp
 import pkg_resources
@@ -63,10 +64,10 @@ def get_weights_dir(folderpath: Optional[str] = None):
 
 
 def reset_device_memory(delete_objs=True):
-    dvals = (x for x in gc.get_objects() if isinstance(x, jax.xla.DeviceValue))
+    dvals = (x for x in gc.get_objects() if isinstance(x, DeviceValue))
     n_deleted = 0
     for dv in dvals:
-        if not isinstance(dv, jax.xla.DeviceConstant):
+        if not isinstance(dv, DeviceConstant):
             try:
                 dv._check_if_deleted()  # pylint: disable=protected-access
                 dv.delete()
