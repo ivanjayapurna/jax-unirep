@@ -4,6 +4,7 @@ from functools import partial
 from random import choice
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, Set
 from tqdm.autonotebook import tqdm
+import gc
 
 import numpy as onp
 import optuna
@@ -28,6 +29,7 @@ from .utils import (
     load_embedding_1900,
     load_params,
     one_hots,
+    reset_device_memory,
     right_pad,
     validate_mLSTM1900_params,
 )
@@ -316,6 +318,9 @@ def fit(
     epoch_len = round(len(sequences) / batch_size)
 
     print("epoch_len:", epoch_len)
+
+    # reset memory to prevent memory leak issue
+    reset_device_memory()
 
     n = n_epochs * epoch_len
     for i in range(n):
