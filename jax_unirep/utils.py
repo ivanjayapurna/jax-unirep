@@ -69,7 +69,7 @@ def reset_device_memory(delete_objs=True):
     delete_objs: bool: whether to delete all live DeviceValues or just free.
     """
     dvals = (x for x in gc.get_objects() if isinstance(x, jax.xla.DeviceValue))
-    print("len(dvals):", len(dvals))
+    print("starting device memory reset")
     for dv in dvals:
         print("dv in dval")
         if not isinstance(dv, jax.xla.DeviceConstant):
