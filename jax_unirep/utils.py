@@ -71,7 +71,6 @@ def reset_device_memory(delete_objs=False):
     dvals = (x for x in gc.get_objects() if isinstance(x, jax.xla.DeviceValue))
     print("starting device memory reset")
     for dv in dvals:
-        print("dv in dval")
         if not isinstance(dv, jax.xla.DeviceConstant):
             try:
                 dv._check_if_deleted()  # pylint: disable=protected-access
@@ -83,8 +82,7 @@ def reset_device_memory(delete_objs=False):
 
         if delete_objs:
             del dv
-    if delete_objs:
-        del dvals
+    del dvals
     gc.collect()
 
 

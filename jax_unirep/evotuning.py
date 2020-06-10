@@ -328,10 +328,14 @@ def fit(
         l = choice(seq_lens)
         x, y = len_batching_funcs[l]()
 
+        print("done with batching")
+
         # actual forward & backwrd pass happens here
         logging.debug("Getting state")
         state = step(i, state)
         params = get_params(state)
+
+        print("done step and params")
 
         if i % epoch_len == 0:
             loss = avg_loss(xs, ys, params)
