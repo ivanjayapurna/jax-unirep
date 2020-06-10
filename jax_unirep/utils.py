@@ -76,10 +76,15 @@ def reset_device_memory(delete_objs=True):
         if not isinstance(dv, jax.xla.DeviceConstant):
             try:
                 dv._check_if_deleted()  # pylint: disable=protected-access
-                dv.delete()
-                n_deleted += 1
-            except (ValueError, AttributeError):
+            except ValueError:
                 pass
+            else:
+                try:
+                    dv.delete()
+                    n_deleted += 1
+                except AttributeError:
+                    pass
+
         if delete_objs:
             del dv
     del dvals
