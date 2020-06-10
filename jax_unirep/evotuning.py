@@ -163,7 +163,7 @@ def length_batch_input_outputs(
     xs = []
     ys = []
     lens = []
-    for idxs in tqdm(idxs_batched):
+    for idxs in tqdm(idxs_batched, desc="evo-pairs batch #"):
         seqs = [sequences[i] for i in idxs]
         x, y = input_output_pairs(seqs)
         xs.append(x)
@@ -300,8 +300,6 @@ def fit(
         for (sl, x, y) in zip(seq_lens, xs, ys)
     }
 
-    print("seq_lens:", seq_lens)
-
     batch_lens = [len(batch) for batch in xs]
     logger.info(
         f"Length-batching done: "
@@ -317,13 +315,11 @@ def fit(
     # calculate how many iterations constitute one epoch approximately
     epoch_len = round(len(sequences) / batch_size)
 
-    print("epoch_len:", epoch_len)
-
     # reset memory to prevent memory leak issue
     reset_device_memory()
 
     n = n_epochs * epoch_len
-    for i in range(n):
+    for i in tqdm(range(n), desc="training iters"):
 
         if i % epoch_len == 0:
             logger.info(f"Starting epoch {int(i / epoch_len) + 1}")
@@ -331,10 +327,6 @@ def fit(
         logging.debug("Getting batches")
         l = choice(seq_lens)
         x, y = len_batching_funcs[l]()
-
-        if i % epoch_len == 0:
-            print("len(x)", len(x))
-            print("len(y)", len(y))
 
         # actual forward & backwrd pass happens here
         logging.debug("Getting state")
