@@ -78,7 +78,7 @@ def reset_device_memory(delete_objs=True):
                 dv._check_if_deleted()  # pylint: disable=protected-access
                 dv.delete()
                 n_deleted += 1
-            except (ValueError,AttributeError):
+            except ValueError:
                 pass
         if delete_objs:
             del dv
