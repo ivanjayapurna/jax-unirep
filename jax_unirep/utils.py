@@ -63,7 +63,7 @@ def get_weights_dir(folderpath: Optional[str] = None):
         )
 
 
-def reset_device_memory(delete_objs=True):
+def reset_device_memory(delete_objs=False):
     """Free all tracked DeviceArray memory and delete objects.
     Args:
     delete_objs: bool: whether to delete all live DeviceValues or just free.
@@ -76,21 +76,15 @@ def reset_device_memory(delete_objs=True):
         if not isinstance(dv, jax.xla.DeviceConstant):
             try:
                 dv._check_if_deleted()  # pylint: disable=protected-access
-            except ValueError:
+                dv.delete()
+                n_deleted += 1
+            except (ValueError, AttributeError):
                 pass
-            else:
-                try:
-                    dv.delete()
-                    n_deleted += 1
-                except AttributeError:
-                    pass
-
         if delete_objs:
             del dv
     del dvals
     gc.collect()
     return n_deleted
-
 
 def dump_params(
     params: Dict, dir_path: Optional[str] = "temp", step: Optional[int] = 0,
