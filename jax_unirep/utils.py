@@ -63,7 +63,7 @@ def get_weights_dir(folderpath: Optional[str] = None):
         )
 
 
-def reset_device_memory(delete_objs=True):
+def reset_device_memory(delete_objs=False):
     """Free all tracked DeviceArray memory and delete objects.
     Args:
     delete_objs: bool: whether to delete all live DeviceValues or just free.
@@ -83,7 +83,8 @@ def reset_device_memory(delete_objs=True):
 
         if delete_objs:
             del dv
-    del dvals
+    if delete_objs:
+        del dvals
     gc.collect()
 
 
