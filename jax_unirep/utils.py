@@ -5,6 +5,7 @@ from pathlib import Path
 from random import choice, sample
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, Set
 from tqdm.autonotebook import tqdm
+import gc
 
 import jax.numpy as np
 import numpy as onp

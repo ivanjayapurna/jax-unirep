@@ -4,7 +4,6 @@ from functools import partial
 from random import choice
 from typing import Callable, Dict, Iterable, List, Optional, Tuple, Set
 from tqdm.autonotebook import tqdm
-import gc
 
 import numpy as onp
 import optuna
