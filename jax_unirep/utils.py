@@ -79,12 +79,13 @@ def reset_device_memory(delete_objs=True):
             except ValueError:
                 print("ValueError excepted")
             except AttributeError:
-                print("ValueError excepted")
+                print("AttributeError excepted")
 
         if delete_objs:
             del dv
     del dvals
     gc.collect()
+
 
 def dump_params(
     params: Dict, dir_path: Optional[str] = "temp", step: Optional[int] = 0,
