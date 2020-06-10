@@ -314,11 +314,12 @@ def fit(
     # calculate how many iterations constitute one epoch approximately
     epoch_len = round(len(sequences) / batch_size)
 
-    # reset memory to prevent memory leak issue
-    reset_device_memory()
-
     n = n_epochs * epoch_len
     for i in tqdm(range(n), desc="training iters"):
+
+        if i % 10 == 0:
+            # reset memory to prevent memory leak issue
+            reset_device_memory()
 
         if i % epoch_len == 0:
             logger.info(f"Starting epoch {int(i / epoch_len) + 1}")
