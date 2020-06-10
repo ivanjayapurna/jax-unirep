@@ -7,7 +7,8 @@ from typing import Callable, Dict, Iterable, List, Optional, Tuple, Set
 from tqdm.autonotebook import tqdm
 import gc
 
-from jax.xla import DeviceValue, DeviceConstant
+import jax.xla.DeviceValue as DeviceValue
+import jax.xla.DeviceConstant as DeviceConstant
 import jax.numpy as np
 import numpy as onp
 import pkg_resources
