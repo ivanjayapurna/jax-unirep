@@ -10,6 +10,7 @@ import optuna
 from jax import grad, jit, lax
 from jax import numpy as np
 from jax import random, vmap
+from jax.interpreters import xla
 from jax.experimental.optimizers import adam
 from jax.experimental.stax import Dense, Softmax, serial
 from sklearn.model_selection import KFold, train_test_split
@@ -320,6 +321,12 @@ def fit(
         if i % epoch_len == 0:
             logger.info(f"Starting epoch {int(i / epoch_len) + 1}")
 
+        if i % 10 == 0:
+            # reset memory to prevent memory leak issue
+            #reset_device_memory()
+            xla._xla_callable.cache_clear()
+            logger.info(f"cleared cache at iter: {i}")
+
         logging.debug("Getting batches")
         l = choice(seq_lens)
         x, y = len_batching_funcs[l]()
@@ -357,10 +364,6 @@ def fit(
                 dump_params(
                     get_params(state), proj_name, (int(i / epoch_len) + 1)
                 )
-
-        if i % 10 == 0:
-            # reset memory to prevent memory leak issue
-            reset_device_memory()
 
     return get_params(state)
 
